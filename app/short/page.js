@@ -1,47 +1,47 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
+
 
 const Page = () => {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
-  const [isgen, setIsgen] = useState(false)
+  const [isgen, setIsgen] = useState(false);
   const [generated, setGenerated] = useState();
   const [loading, setLoading] = useState(false);
 
   const genrate = (url, shortUrl) => {
-    setLoading(true)
+    setLoading(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     console.log(url, shortUrl);
 
     const raw = JSON.stringify({
-      "url": url,
-      "shorturl": shortUrl
+      url: url,
+      shorturl: shortUrl,
     });
 
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
-      redirect: "follow"
+      redirect: "follow",
     };
 
     fetch("/api/generate", requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        setUrl("")
-        setIsgen(true)
-        setShortUrl("")
-        setGenerated(`${process.env.NEXT_HOST}/${shortUrl}`)
+        setUrl("");
+        setIsgen(true);
+        setShortUrl("");
+      
+        setGenerated(`${process.env.NEXT_PUBLIC_URL}${shortUrl}`);
 
-        setLoading(false)
+        console.log(process.env.NEXT_PUBLIC_URL)
+        setLoading(false);
       })
       .catch((error) => console.error(error));
-
-
-
-  }
-
+  };
 
   return (
     <div className="flex flex-col items-center gap-11">
@@ -75,14 +75,22 @@ const Page = () => {
           </button>
         ) : (
           <button
-            onClick={() => { genrate(url, shortUrl) }}
+            onClick={() => {
+              genrate(url, shortUrl);
+            }}
             className="bg-blue-500 text-white cursor-pointer p-5 rounded-2xl w-auto hover:bg-blue-600 transition-colors"
           >
             Generate
           </button>
         )}
       </div>
-      {isgen && (<div className="bg-white w-[27vw] h-[5vh] text-black">Your Url Is : {generated}</div>)}
+      {isgen && (
+        <Link target="_blank" href={generated}>
+          <div className=" w-[27vw] h-[5vh] text-white font-extrabold text-2xl flex justify-center items-center">
+            <span>Your Url Is : {generated}</span>
+          </div>
+        </Link>
+      )}
     </div>
   );
 };
