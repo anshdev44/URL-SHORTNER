@@ -9,6 +9,8 @@ export async function POST(request) {
     const collection = db.collection("url")
 
     // Check if the short url exists
+
+   
     
     const doc = await collection.findOne({shorturl: body.shorturl})
     if(doc){
@@ -21,5 +23,5 @@ export async function POST(request) {
     })
   
 
-    return Response.json({success: true, error: false,  message: 'URL Generated Successfully' })
+        return Response.json({success: true, error: false,  message: 'URL Generated Successfully' })
   }
