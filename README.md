@@ -25,28 +25,6 @@ You can shorten long URLs into neat, shareable links and track them with ease.
 
 ---
 
-## 📂 Project Structure
-URL-SHORTENER/
-├── app/
-│ ├── [shorturl]/ # Dynamic route for redirects
-│ ├── about/ # About page
-│ ├── api/
-│ │ └── generate/ # API route to generate short URLs
-│ ├── components/ # UI Components (Navbar, Main section)
-│ ├── db/ # MongoDB connection
-│ ├── short/ # Shortened link display page
-│ ├── layout.js # Root layout
-│ ├── page.js # Homepage
-│
-├── public/ # Static assets
-├── .env.local # Environment variables
-├── package.json
-├── netlify.toml
-
-
-
----
-
 ## ⚙️ Installation & Setup
 
 ```bash
