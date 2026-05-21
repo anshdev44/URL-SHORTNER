@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Shuffle, Clock, X } from "lucide-react";
 
@@ -25,6 +25,19 @@ const Page = () => {
   const [showCustomExpiry, setShowCustomExpiry] = useState(false);
   const [customExpiry, setCustomExpiry] = useState("");
   const [expiresAtDisplay, setExpiresAtDisplay] = useState(null);
+
+  const [creatorId, setCreatorId] = useState("");
+
+  useEffect(() => {
+    let id = localStorage.getItem("creatorId");
+    if (!id) {
+      id = typeof crypto !== "undefined" && crypto.randomUUID 
+        ? crypto.randomUUID() 
+        : Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem("creatorId", id);
+    }
+    setCreatorId(id);
+  }, []);
 
   const validateAlias = (value) => {
     if (!value) {
@@ -95,6 +108,7 @@ const Page = () => {
       url: url,
       shorturl: shortUrl || "",
       expiresAt: expiresAt,
+      creatorId: creatorId,
     });
 
     const requestOptions = {

@@ -2,15 +2,22 @@ import clientPromise from "../../db/mongodb"
 
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+export async function GET(request) {
     try {
+        const url = new URL(request.url);
+        const creatorId = url.searchParams.get("creatorId");
+
+        if (!creatorId) {
+            return Response.json({ success: false, error: "Unauthorized" }, { status: 403 });
+        }
+
         const client = await clientPromise;
         const db = client.db("BITLINKS")
         const collection = db.collection("url")
 
-        const docs = await collection.find({}).sort({ clicks: -1 }).toArray()
+        const docs = await collection.find({ creatorId }).sort({ clicks: -1 }).toArray()
 
-        // Normalize old documents that may not have clicks/createdAt/expiresAt
+       
         const data = docs.map(doc => ({
             url: doc.url,
             shorturl: doc.shorturl,

@@ -9,7 +9,13 @@ const Dashboard = () => {
   const [copiedIndex, setCopiedIndex] = useState(null);
 
   useEffect(() => {
-    fetch("/api/analytics")
+    const creatorId = localStorage.getItem("creatorId");
+    if (!creatorId) {
+      setLoading(false);
+      return;
+    }
+
+    fetch(`/api/analytics?creatorId=${creatorId}`)
       .then((res) => res.json())
       .then((result) => {
         if (result.success) {

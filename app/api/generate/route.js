@@ -1,18 +1,21 @@
 import clientPromise from "../../db/mongodb"
 
-export async function POST(request) {
-    const body = await request.json() 
+export const dynamic = 'force-dynamic'
 
-    const client = await clientPromise;
+export async function POST(request) {
+    try {
+        const body = await request.json() 
+
+        const client = await clientPromise;
     const db = client.db("BITLINKS")
     const collection = db.collection("url")
 
-    // Validate URL
+    
     if (!body.url) {
         return Response.json({ success: false, error: true, message: 'Please provide a URL' })
     }
 
-    // Auto-generate alias if not provided
+   
     let shorturl = body.shorturl
     if (!shorturl || shorturl.trim() === '') {
         shorturl = generateAlias()
@@ -28,7 +31,7 @@ export async function POST(request) {
             return Response.json({ success: false, error: true, message: 'Could not generate a unique alias. Please try again.' })
         }
     } else {
-        // Validate custom alias format
+       
         const aliasRegex = /^[a-zA-Z0-9_-]+$/
         if (!aliasRegex.test(shorturl)) {
             return Response.json({ success: false, error: true, message: 'Alias can only contain letters, numbers, hyphens, and underscores.' })
@@ -37,14 +40,13 @@ export async function POST(request) {
             return Response.json({ success: false, error: true, message: 'Alias must be between 2 and 50 characters.' })
         }
 
-        // Check if the short url already exists
         const doc = await collection.findOne({ shorturl })
         if (doc) {
             return Response.json({ success: false, error: true, message: 'URL already exists!' })
         }
     }
 
-    // Handle expiration
+  
     let expiresAt = null
     if (body.expiresAt) {
         const expDate = new Date(body.expiresAt)
@@ -62,10 +64,15 @@ export async function POST(request) {
         shorturl: shorturl,
         clicks: 0,
         createdAt: new Date(),
-        expiresAt: expiresAt
+        expiresAt: expiresAt,
+        creatorId: body.creatorId || null
     })
 
-    return Response.json({ success: true, error: false, message: 'URL Generated Successfully', shorturl: shorturl })
+        return Response.json({ success: true, error: false, message: 'URL Generated Successfully', shorturl: shorturl })
+    } catch (error) {
+        console.error("API Error:", error);
+        return Response.json({ success: false, error: true, message: 'Server Error: ' + error.message }, { status: 500 })
+    }
 }
 
 function generateAlias() {
