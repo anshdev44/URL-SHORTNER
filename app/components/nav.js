@@ -33,6 +33,9 @@ const Nav = () => {
               <li className='cursor-pointer hover:text-blue-300 transition-colors duration-200 text-white/90 hover:underline underline-offset-4'>
                 <Link href={"/short"}>Shorten</Link>
               </li>
+              <li className='cursor-pointer hover:text-blue-300 transition-colors duration-200 text-white/90 hover:underline underline-offset-4'>
+                <Link href={"/dashboard"}>Dashboard</Link>
+              </li>
             </ul>
           </nav>
 
@@ -123,6 +126,15 @@ const Nav = () => {
                   className='block cursor-pointer hover:text-blue-300 transition-colors duration-200 text-white/90 hover:underline underline-offset-4 py-3 text-lg'
                 >
                   Shorten
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href={"/dashboard"} 
+                  onClick={toggleMenu}
+                  className='block cursor-pointer hover:text-blue-300 transition-colors duration-200 text-white/90 hover:underline underline-offset-4 py-3 text-lg'
+                >
+                  Dashboard
                 </Link>
               </li>
             </ul>
